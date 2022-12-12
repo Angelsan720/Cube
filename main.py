@@ -1,6 +1,21 @@
 import cv2
-import plotly.express as px
 import numpy as np
+
+colors = {
+    'red'       :[135,  74,  81],
+    'blue'      :[147, 183, 217],
+    'green'     :[ 42, 165,  25],
+    'orange'    :[232, 125,  13],
+    'yellow'    :[255, 232, 159],
+    'white'     :[234, 231, 240],
+    'black'     :[ 28,  26,  29],
+    1           :[135,  74,  81],
+    2           :[147, 183, 217],
+    3           :[ 42, 165,  25],
+    4           :[232, 125,  13],
+    5           :[255, 232, 159],
+    6           :[234, 231, 240],
+}
 
 class Cube:
     def __init__(self, size=3, corder = [520,440]) -> None:
@@ -33,19 +48,19 @@ class Cube:
             
             for j in range(self.size):
                 if monoColor:
-                    self.side1[-1].append(monoColor)
-                    self.side2[-1].append(monoColor)
-                    self.side3[-1].append(monoColor)
-                    self.side4[-1].append(monoColor)
-                    self.side5[-1].append(monoColor)
-                    self.side6[-1].append(monoColor)
+                    self.side1[-1].append(colors['white'])
+                    self.side2[-1].append(colors['white'])
+                    self.side3[-1].append(colors['white'])
+                    self.side4[-1].append(colors['white'])
+                    self.side5[-1].append(colors['white'])
+                    self.side6[-1].append(colors['white'])
                 else:
-                    self.side1[-1].append(1)
-                    self.side2[-1].append(2)
-                    self.side3[-1].append(3)
-                    self.side4[-1].append(4)
-                    self.side5[-1].append(5)
-                    self.side6[-1].append(6)
+                    self.side1[-1].append(colors['white'])
+                    self.side2[-1].append(colors['green'])
+                    self.side3[-1].append(colors['blue'])
+                    self.side4[-1].append(colors['red'])
+                    self.side5[-1].append(colors['yellow'])
+                    self.side6[-1].append(colors['orange'])
         return self
     def Draw(self):
         DrawMagicSquares(self)
@@ -56,21 +71,6 @@ cv2.namedWindow('Cube')
 cv2.namedWindow('Main')
 obj = Cube(3)
 obj = obj.initialize()
-colors = {
-    'red'       :[135,  74,  81],
-    'blue'      :[147, 183, 217],
-    'green'     :[ 42, 165,  25],
-    'orange'    :[232, 125,  13],
-    'yellow'    :[255, 232, 159],
-    'white'     :[234, 231, 240],
-    'black'     :[ 28,  26,  29],
-    1           :[135,  74,  81],
-    2           :[147, 183, 217],
-    3           :[ 42, 165,  25],
-    4           :[232, 125,  13],
-    5           :[255, 232, 159],
-    6           :[234, 231, 240],
-}
 def DrawCubeTup(img, tup, corner1, corner2, overlay = False):
     x1, y1 = corner1
     x2, y2 = corner2
@@ -85,8 +85,8 @@ def DrawCubeTup(img, tup, corner1, corner2, overlay = False):
                             color=color, 
                             corner1=(x1 + (xStep * index    ), y1 + (yStep * index2    )),
                             corner2=(x1 + (xStep * (index+1)), y1 + (yStep * (index2+1))),
-                            infill=True,
-                            thickness=1)
+                            infill=False,
+                            thickness=3)
     
     
     
@@ -95,19 +95,19 @@ def DrawCubeTup(img, tup, corner1, corner2, overlay = False):
 
 def DrawMagicSquares(cube:Cube):
     
-    img = np.zeros((1200,950,3))
+    img = np.zeros((800,1000,3))
     tup = cube.side1
-    img = DrawCubeTup(img, tup, (350,600),(600,850))
+    img = DrawCubeTup(img, tup, (300,500),(500,700))
     tup = cube.side2
-    img = DrawCubeTup(img, tup, (100,350),(350,600))
+    img = DrawCubeTup(img, tup, (100,300),(300,500))
     tup = cube.side3
-    img = DrawCubeTup(img, tup, (350,350),(600,600))
+    img = DrawCubeTup(img, tup, (300,300),(500,500))
     tup = cube.side4
-    img = DrawCubeTup(img, tup, (600,350),(850,600))
-    tup = cube.side1
-    img = DrawCubeTup(img, tup, (850,350),(1100,600))
+    img = DrawCubeTup(img, tup, (500,300),(700,500))
+    tup = cube.side5
+    img = DrawCubeTup(img, tup, (700,300),(900,500))
     tup = cube.side6
-    img = DrawCubeTup(img, tup, (350,100),(600,350))
+    img = DrawCubeTup(img, tup, (300,100),(500,300))
     
     return img
    
@@ -139,12 +139,9 @@ while True:
     red = [255,0,0]
     blue = [0,0,255]
     purple = [255,0,255]
-    image_to_display = DrawSquare(image_to_display,color = colors['green'], corner1=[120,40], corner2=[520,440], thickness=3)
+    #image_to_display = DrawSquare(image_to_display,color = colors['green'], corner1=[120,40], corner2=[520,440], thickness=3)
+    #img = DrawMagicSquares(obj)
   
-    cv2.imshow("Main", image_to_display)
-    print(obj.side1)
-    img = DrawMagicSquares(obj)
-    cv2.imshow('Cube', img)    
     key = cv2.waitKey(0)
     if key == 27:
         break
